@@ -1,32 +1,32 @@
 var Muxer = require('./lib/muxer').Muxer;
 var Progress = require('./lib/progress').Progress;
 
-var muxer = new Muxer('[muxer] %s');
+var muxer = new Muxer({formatString: '[muxer] %s'});
 muxer.stream.pipe(process.stdout);
 
 muxer.write('This is a test.');
-muxer.write('Testing %s: %d, %j.', 'A', 123, {a: 1});
+muxer.writef('[muxer/foo] %s', 'Testing %s: %d, %j.', 'A', 123, {a: 1});
 
 var progress = new Progress('Progress... ', {
   logger: muxer.write.bind(muxer, '%s')
 });
 
-var through = require('through');
-var split = require('split');
-var noise = through();
-noise.pipe(muxer.stream);
-var done;
-var noiseCounter = 0;
-var id = setInterval(function() {
-  if (done) {
-    clearInterval(id);
-    noise.end();
-    console.log('noise total =', noiseCounter);
-  } else {
-    noiseCounter++;
-    noise.write('noise[' + noiseCounter + '] ' + (noiseCounter % 5 === 0 ? '<BR>\n' : ''));
-  }
-}, 35);
+// var through = require('through');
+// var split = require('split');
+// var noise = through();
+// noise.pipe(muxer.stream);
+// var done;
+// var noiseCounter = 0;
+// var id = setInterval(function() {
+//   if (done) {
+//     clearInterval(id);
+//     noise.end();
+//     console.log('noise total =', noiseCounter);
+//   } else {
+//     noiseCounter++;
+//     noise.write('noise[' + noiseCounter + '] ' + (noiseCounter % 5 === 0 ? '<BR>\n' : ''));
+//   }
+// }, 35);
 
 var counter = 0;
 var max = 100;
