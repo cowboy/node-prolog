@@ -1,10 +1,13 @@
+'use strict';
+
 var Muxer = require('./lib/muxer').Muxer;
 var Progress = require('./lib/progress').Progress;
 
 var muxer = new Muxer({formatString: '[muxer] %s'});
 muxer.stream.pipe(process.stdout);
 
-muxer.write('This is a test.');
+muxer.write('1 This is a test.');
+muxer.write('2 Testing %s: %d, %j.', 'A', 123, {a: 1});
 muxer.writef('[muxer/foo] %s', 'Testing %s: %d, %j.', 'A', 123, {a: 1});
 
 var progress = new Progress('Progress... ', {
@@ -15,7 +18,6 @@ var progress = new Progress('Progress... ', {
 // var split = require('split');
 // var noise = through();
 // noise.pipe(muxer.stream);
-// var done;
 // var noiseCounter = 0;
 // var id = setInterval(function() {
 //   if (done) {
@@ -28,6 +30,7 @@ var progress = new Progress('Progress... ', {
 //   }
 // }, 35);
 
+var done;
 var counter = 0;
 var max = 100;
 (function loopy() {

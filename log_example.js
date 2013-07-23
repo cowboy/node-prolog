@@ -1,3 +1,5 @@
+'use strict';
+
 var Log = require('./lib/grunt-log').Log;
 var log = new Log({
   // levels: ['error', 'warn', 'info'],
@@ -19,7 +21,7 @@ function start(id, delay, level, message, max, interrupt) {
   (function loopy() {
     if (i && i % interrupt === 0) { log[level]('Random interruption 1'); }
     i++;
-    var message = 'abcdefghijk'.slice(0, Math.random() * 10 + 1);
+    // var message = 'abcdefghijk'.slice(0, Math.random() * 10 + 1);
     // progress.update(parseInt(100 * (max - i + 1) / max) + '%');
     // progress.update({value: max - i + 1, max: max, pct: true});
     // progress.update(i /*max - i + 1*/, max);
