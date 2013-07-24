@@ -75,3 +75,7 @@ var id2 = setInterval(function() {
     clearInterval(id2);
   }
 }, 150);
+
+// node mux_log_example.js; echo ---; cat tmp/out2.txt
+// node mux_log_example.js >/dev/null; echo ---; cat tmp/out2.txt
+// node mux_log_example.js 2>/dev/null; echo ---; cat tmp/out2.txt
