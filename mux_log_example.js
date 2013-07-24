@@ -1,59 +1,69 @@
 'use strict';
 
-var Muxer = require('./lib/muxer').Muxer;
-var Progress = require('./lib/progress').Progress;
-
 var colors = require('colors');
 
 var log = {};
 
-log.formatStrings = {};
+log.Muxer = require('./lib/muxer').Muxer;
+log.Progress = require('./lib/progress').Progress;
+
+log.levels = {};
 log.progressState = {};
 
 log.addLevel = function(name, formatString) {
   var level = log[name] = function() {
-    var args = [log.formatStrings[name]].concat([].slice.call(arguments));
+    var args = [log.levels[name].formatString].concat([].slice.call(arguments));
     level.muxer.writef.apply(level.muxer, args);
   };
-  level.muxer = new Muxer({progressState: log.progressState});
+  level.muxer = new log.Muxer({progressState: log.progressState});
   level.stream = level.muxer.stream;
   level.progress = function(prefix) {
-    return new Progress(prefix, {
+    return new log.Progress(prefix, {
       logger: level.bind(null, '%s')
     });
   };
-  log.formatStrings[name] = formatString;
+  log.levels[name] = {
+    formatString: formatString,
+  };
 };
+
+var through = require('through');
+log.combine = function() {
+  var stream = through();
+  [].slice.apply(arguments).forEach(function(level) {
+    log[level].stream.pipe(stream);
+  });
+  return stream;
+};
+
+// add logging level methods / streams
 
 log.addLevel('info', '[INFO] %s'.green);
 log.addLevel('warn', '[WARN] %s'.yellow);
-log.addLevel('err', '[ERR] %s'.red);
+log.addLevel('error', '[ERROR] %s'.red);
 
-log.info.stream.pipe(process.stdout);
-log.warn.stream.pipe(process.stdout);
-log.err.stream.pipe(process.stderr);
+// set up streams
 
-var through = require('through');
-var fs = require('fs');
+log.combine('info', 'warn').pipe(process.stdout);
+log.error.stream.pipe(process.stderr);
 
-var fileStream = through(function(data) {
-  data = colors.stripColors(data);
-  data = data.replace(/\r/g, '\n');
-  this.queue(data);
-});
-fileStream.pipe(fs.createWriteStream('tmp/out2.txt'));
-log.info.stream.pipe(fileStream);
-log.warn.stream.pipe(fileStream);
-log.err.stream.pipe(fileStream);
+log.combine('info', 'warn', 'error')
+  .pipe(through(function(data) {
+    data = colors.stripColors(data);
+    data = data.replace(/\r/g, '\n');
+    this.queue(data);
+  }))
+  .pipe(require('fs').createWriteStream('tmp/out2.txt'));
 
+// simulation
 
 var cmds = [
   log.info.bind(log, 'This is a test info.'),
   log.warn.bind(log, 'This is a test warning.'),
-  log.err.bind(log, 'This is a test error.'),
+  log.error.bind(log, 'This is a test error.'),
   log.info.bind(log, 'Testing info %s: %d, %j.', 'A', 123, {a: 1}),
   log.warn.bind(log, 'Testing warning %s: %d, %j.', 'A', 123, {a: 1}),
-  log.err.bind(log, 'Testing error %s: %d, %j.', 'A', 123, {a: 1}),
+  log.error.bind(log, 'Testing error %s: %d, %j.', 'A', 123, {a: 1}),
 ];
 
 var id1 = setInterval(function() {
