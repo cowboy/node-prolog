@@ -3,22 +3,23 @@
 var Muxer = require('./lib/muxer').Muxer;
 var Progress = require('./lib/progress').Progress;
 
-var EventEmitter2 = require('eventemitter2').EventEmitter2;
-
 var colors = require('colors');
 
 var log = {};
-log.event = new EventEmitter2({wildcard: true});
-
-var util = require('util');
 
 log.formatStrings = {};
+log.progressState = {};
 
 log.addLevel = function(name, formatString) {
-  log[name] = log.event.emit.bind(log.event, name);
-  log[name].progress = function(prefix) {
+  var level = log[name] = function() {
+    var args = [log.formatStrings[name]].concat([].slice.call(arguments));
+    level.muxer.writef.apply(level.muxer, args);
+  };
+  level.muxer = new Muxer({progressState: log.progressState});
+  level.stream = level.muxer.stream;
+  level.progress = function(prefix) {
     return new Progress(prefix, {
-      logger: log[name].bind(null, '%s')
+      logger: level.bind(null, '%s')
     });
   };
   log.formatStrings[name] = formatString;
@@ -28,34 +29,22 @@ log.addLevel('info', '[INFO] %s'.green);
 log.addLevel('warn', '[WARN] %s'.yellow);
 log.addLevel('err', '[ERR] %s'.red);
 
-log.combine = function() {
-  var muxer = new Muxer();
-  [].slice.call(arguments).forEach(function(event) {
-    log.event.on(event, function() {
-      var args = [log.formatStrings[event]].concat([].slice.call(arguments));
-      muxer.writef.apply(muxer, args);
-    });
-  });
-  return muxer.stream;
-};
-
-if (0) {
-  log.combine('info', 'warn').pipe(process.stdout);
-  log.combine('err').pipe(process.stderr);
-} else {
-  log.combine('info', 'warn', 'err').pipe(process.stdout);
-}
+log.info.stream.pipe(process.stdout);
+log.warn.stream.pipe(process.stdout);
+log.err.stream.pipe(process.stderr);
 
 var through = require('through');
 var fs = require('fs');
-log.combine('info', 'warn', 'err')
-  .pipe(through(function(data) {
-    data = colors.stripColors(data);
-    data = data.replace(/\r/g, '\n');
-    this.queue(data);
-  }))
-  .pipe(fs.createWriteStream('tmp/out2.txt'));
 
+var fileStream = through(function(data) {
+  data = colors.stripColors(data);
+  // data = data.replace(/\r/g, '\n');
+  this.queue(data);
+});
+fileStream.pipe(fs.createWriteStream('tmp/out2.txt'));
+log.info.stream.pipe(fileStream);
+log.warn.stream.pipe(fileStream);
+log.err.stream.pipe(fileStream);
 
 
 var cmds = [
