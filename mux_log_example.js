@@ -38,7 +38,7 @@ var fs = require('fs');
 
 var fileStream = through(function(data) {
   data = colors.stripColors(data);
-  // data = data.replace(/\r/g, '\n');
+  data = data.replace(/\r/g, '\n');
   this.queue(data);
 });
 fileStream.pipe(fs.createWriteStream('tmp/out2.txt'));
