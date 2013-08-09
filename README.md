@@ -1,4 +1,4 @@
-# prolog [![Build Status](https://secure.travis-ci.org/cowboy/prolog.png?branch=master)](http://travis-ci.org/cowboy/prolog)
+# prolog [![Build Status](https://secure.travis-ci.org/cowboy/node-prolog.png?branch=master)](http://travis-ci.org/cowboy/node-prolog)
 
 An event- and stream-aware logger for pros. Meaning, professionals.
 
