@@ -1,6 +1,6 @@
 'use strict';
 
-var grunt_log = require('../lib/grunt-log.js');
+var ProLog = require('../lib/prolog.js').ProLog;
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -27,10 +27,10 @@ exports['awesome'] = {
     // setup here
     done();
   },
-  'no args': function(test) {
+  'instance': function(test) {
     test.expect(1);
     // tests here
-    test.equal(grunt_log.awesome(), 'awesome', 'should be awesome.');
+    test.ok(new ProLog() instanceof ProLog, 'Totally lazy.');
     test.done();
   },
 };

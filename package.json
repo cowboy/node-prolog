@@ -1,26 +1,26 @@
 {
-  "name": "grunt-log",
-  "description": "Grunt's logging methods, standalone.",
+  "name": "prolog",
+  "description": "An event- and stream-aware logger for pros. Meaning, professionals.",
   "version": "0.1.0",
-  "homepage": "https://github.com/gruntjs/grunt-log",
+  "homepage": "https://github.com/cowboy/prolog",
   "author": {
     "name": "\"Cowboy\" Ben Alman",
     "url": "http://benalman.com/"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/gruntjs/grunt-log.git"
+    "url": "git://github.com/cowboy/prolog.git"
   },
   "bugs": {
-    "url": "https://github.com/gruntjs/grunt-log/issues"
+    "url": "https://github.com/cowboy/prolog/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/gruntjs/grunt-log/blob/master/LICENSE-MIT"
+      "url": "https://github.com/cowboy/prolog/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "lib/grunt-log",
+  "main": "lib/prolog",
   "engines": {
     "node": ">= 0.8.0"
   },
@@ -38,7 +38,11 @@
     "grunt-contrib-nodeunit": "~0.1.2",
     "grunt-contrib-watch": "~0.2.0",
     "grunt": "~0.4.0",
-    "colors": "~0.6.0-1"
+    "colors": "~0.6.0-1",
+    "event-stream": "~3.0.16",
+    "async": "~0.2.9"
   },
-  "keywords": []
+  "keywords": [
+    "log"
+  ]
 }
