@@ -1,7 +1,7 @@
 {
   "name": "prolog",
   "description": "An event- and stream-aware logger for pros. Meaning, professionals.",
-  "version": "0.1.0",
+  "version": "0.1.1-alpha",
   "homepage": "https://github.com/cowboy/node-prolog",
   "author": {
     "name": "\"Cowboy\" Ben Alman",

@@ -12,6 +12,7 @@ log.warn('This is a test warn message.');
 log.error('This is a test error message.');
 
 // Or anything you'd send to console.log, really.
+log.log(['This', 'array', 'will', 'be', 'logged', 'over', 'multiple', 'lines.']);
 log.log('Testing log %s: %d, %j.', 'A', 1, {a: 1});
 log.info('Testing info %s: %d, %j.', 'A', 2, {b: 2});
 log.debug('Testing debug %s: %d, %j.', 'A', 3, {c: 3});
