@@ -24,12 +24,12 @@ var log = new ProLog({
 // You can log a single string.
 log.log('This is a test log message.');
 log.info('This is a test info message.');
-log.error('This is a test error message.');
+log.error(new Error('This is a test error message.').stack);
 log.success('This is a test success message.');
 
 // Or anything you'd send to console.log, really.
-log.log(['This', 'array', 'will', 'be', 'logged', 'over', 'multiple', 'lines.']);
 log.log('Testing log %s: %d, %j.', 'A', 1, {a: 1});
+log.log([['This', 'array', 'will', 'be'], ['logged', 'over'], ['multiple', 'lines.']]);
 log.info('Testing info %s: %d, %j.', 'A', 2, {b: 2});
 log.error('Testing error %s: %d, %j.', 'A', 5, {e: 5});
 log.success('Testing success %s: %d, %j.', 'A', 6, {e: 6});

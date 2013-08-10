@@ -9,7 +9,9 @@ var log = new ProLog({
     }
     // Modify the message for "error" levels.
     else if (data.level === 'error') {
-      data.message = '>>>> ' + data.message + ' <<<<';
+      data.message = data.message.split('\n').map(function(line) {
+        return '>>>> ' + line;
+      }).join('\n');
     }
   },
 });
@@ -19,10 +21,11 @@ log.log('This is a test log message.');
 log.info('This is a test info message.');
 log.debug('This is a test debug message.');
 log.warn('This is a test warn message.');
-log.error('This is a test error message.');
+log.error(new Error('This is a test error message.').stack);
 
 // Or anything you'd send to console.log, really.
 log.log('Testing log %s: %d, %j.', 'A', 1, {a: 1});
+log.log([['This', 'array', 'will', 'be'], ['logged', 'over'], ['multiple', 'lines.']]);
 log.info('Testing info %s: %d, %j.', 'A', 2, {b: 2});
 log.debug('Testing debug %s: %d, %j.', 'A', 3, {c: 3});
 log.warn('Testing warn %s: %d, %j.', 'A', 4, {d: 4});
