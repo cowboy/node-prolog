@@ -1,13 +1,13 @@
 var ProLog = require('../lib/prolog').ProLog;
-var colors = require('colors');
+var $ = require('chalk');
 
 // Instantiate logger with custom levels.
 var parentLog = new ProLog({
   levels: {
-    header: '%s%s'.underline,
-    parentonly: '[par] %s%s'.green,
+    header: $.underline('%s%s'),
+    parentonly: $.green('[par] %s%s'),
     log: '[log] %s%s',
-    error: '[err] %s%s'.red,
+    error: $.red('[err] %s%s'),
   },
 });
 
@@ -15,8 +15,8 @@ var parentLog = new ProLog({
 // the "output" option is set to false by default for child loggers.
 var childLog = new ProLog(parentLog, {
   levels: {
-    parentonly: null,             // Don't inherit the parent-only level.
-    childonly: '[chi] %s%s'.cyan, // Create a child-only level.
+    parentonly: null,                // Don't inherit the parent-only level.
+    childonly: $.cyan('[chi] %s%s'), // Create a child-only level.
   },
 });
 

@@ -1,5 +1,5 @@
 var ProLog = require('../lib/prolog').ProLog;
-var colors = require('colors');
+var $ = require('chalk');
 var util = require('util');
 
 // Instantiate logger with custom options.
@@ -7,17 +7,17 @@ var log = new ProLog({
   // Custom formatting function (fancy padding).
   format: function(data) {
     var pad = data.indent === 0 ? '' :
-      ('├' + Array(data.indent * 2).join('─') + ' ').grey;
+      $.gray('├' + Array(data.indent * 2).join('─') + ' ');
     return data.message.split('\n').map(function(line) {
       return util.format(data.format, pad, line);
     }).join('\n');
   },
   // Custom logging levels and format strings.
   levels: {
-    log: '[log] %s' + '%s%s',
-    info: '[inf] %s'.cyan + '%s%s'.cyan,
-    error: '[wtf] %s'.red + '%s%s'.red,
-    success: '[yay] %s'.green + '%s%s'.green,
+    log: 'log' + ' %s' + '%s',
+    info: $.cyan('inf') + ' %s' + $.cyan('%s'),
+    error: $.bgRed.white('wtf') + ' %s' + $.red('%s'),
+    success: $.green('yay') + ' %s' + $.green('%s'),
   },
 });
 

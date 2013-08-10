@@ -36,11 +36,11 @@
     "grunt-contrib-nodeunit": "~0.1.2",
     "grunt-contrib-watch": "~0.2.0",
     "grunt": "~0.4.0",
-    "colors": "~0.6.0-1",
     "split": "~0.2.6",
     "through": "~2.3.4",
     "event-stream": "~3.0.16",
-    "async": "~0.2.9"
+    "async": "~0.2.9",
+    "chalk": "~0.2.0"
   },
   "keywords": [
     "log",
