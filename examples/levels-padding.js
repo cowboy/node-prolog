@@ -14,10 +14,10 @@ var log = new ProLog({
   },
   // Custom logging levels and format strings.
   levels: {
-    log: 'log' + ' %s' + '%s',
-    info: $.cyan('inf') + ' %s' + $.cyan('%s'),
-    error: $.bgRed.white('wtf') + ' %s' + $.red('%s'),
-    success: $.green('yay') + ' %s' + $.green('%s'),
+    log: {priority: 1, format: 'log' + ' %s' + '%s'},
+    info: {priority: 2, format: $.cyan('inf') + ' %s' + $.cyan('%s')},
+    success: {priority: 3, format: $.green('yay') + ' %s' + $.green('%s')},
+    error: {priority: 4, format: $.bgRed.white('wtf') + ' %s' + $.red('%s')},
   },
 });
 
