@@ -3,7 +3,26 @@ var ProLog = require('../lib/prolog').ProLog;
 // Instantiate logger. The default "output" method will log "warn" and
 // "error" to stderr, and everything else to stdout.
 var log = new ProLog();
-// log.output = function(data) { console.log(JSON.stringify(data)); };
+
+// // Plain JSON output:
+// var log = new ProLog({format: false});
+
+// // Add timestamp and debugging info using default formatting:
+// var log = new ProLog({formatDate: true, formatDebug: true});
+
+// // Add custom date and padding formatters, using default formatting:
+// var log = new ProLog({
+//   formatDate: function(data, index) {
+//     return '[' + require('moment')(data.timeStamp).format('HH:mm:ss') + '] ';
+//   },
+//   formatPadding: function(data, index) {
+//     return new Array(data.indent + 1).join('> ');
+//   },
+// });
+
+// // Completely customize output:
+// var log = new ProLog({output: false});
+// log.on('log', function(data) { console.log('[%s] %s', data.level, data.message); });
 
 // There's a generic log method.
 log.time('Generic log method');
