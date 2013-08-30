@@ -1,13 +1,17 @@
 var ProLog = require('../lib/prolog').ProLog;
 var $ = require('chalk');
 
+function makeFormat(level, messageColor) {
+  return level + ' ' + $.gray('${padding}') + $[messageColor]('${message}');
+}
+
 // Instantiate logger with custom levels.
 var parentLog = new ProLog({
   levels: {
-    header: $.underline('%s%s'),
-    parentonly: $.green('[par] %s%s'),
-    log: '[log] %s%s',
-    error: $.red('[err] %s%s'),
+    header:     {priority: 0, format: makeFormat('>>>', 'underline')},
+    log:        {priority: 1, format: makeFormat('log', 'reset')},
+    parentonly: {priority: 2, format: makeFormat($.green('par'), 'green')},
+    error:      {priority: 3, format: makeFormat($.red('err'), 'red')},
   },
 });
 
@@ -15,13 +19,14 @@ var parentLog = new ProLog({
 // the "output" option is set to false by default for child loggers.
 var childLog = new ProLog(parentLog, {
   levels: {
-    parentonly: null,                // Don't inherit the parent-only level.
-    childonly: $.cyan('[chi] %s%s'), // Create a child-only level.
+    // Don't inherit the parent-only level.
+    parentonly: null,
+    // Create a child-only level.
+    childonly: {priority: 2, format: makeFormat($.cyan('chi'), 'cyan')},
   },
 });
 
-parentLog.header('Logging levels that don\'t exist on a logger can\'t be called.');
-
+parentLog.group('Logging levels that don\'t exist on a logger can\'t be called.');
 parentLog.log('This log message comes from the parent.');
 parentLog.parentonly('This "parentonly" message comes from the parent.');
 try {
@@ -29,9 +34,9 @@ try {
 } catch (err) {
   parentLog.error('Exception: %s', err.message);
 }
+parentLog.groupEnd();
 
-parentLog.header('But will be passed-through.');
-
+childLog.group('But will be passed-through.');
 childLog.log('This log message comes from the child.');
 childLog.childonly('This "childonly" message comes from the child.');
 try {
@@ -39,10 +44,14 @@ try {
 } catch (err) {
   childLog.error('Exception: %s', err.message);
 }
+childLog.groupEnd();
 
+// Just a little something to visually differentiate childLog messages.
+childLog.filter = function(data) {
+  data.message = childLog.eachLine(data.message, $.yellow);
+};
 
 parentLog.header('Also, indentation is cumulative!');
-
 parentLog.log('This parent log message should not be indented.');
 childLog.log('This child log message should not be indented.');
 parentLog.group();
