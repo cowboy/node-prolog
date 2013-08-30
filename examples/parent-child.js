@@ -46,10 +46,11 @@ try {
 }
 childLog.groupEnd();
 
-// Just a little something to visually differentiate childLog messages.
+// Help differentiate childLog messages visually.
 childLog.filter = function(data) {
   data.message = childLog.eachLine(data.message, $.yellow);
 };
+childLog.log('All childlog messages should now be yellow.');
 
 parentLog.header('Also, indentation is cumulative!');
 parentLog.log('This parent log message should not be indented.');
