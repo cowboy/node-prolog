@@ -2,7 +2,11 @@ var ProLog = require('../lib/prolog').ProLog;
 var $ = require('chalk');
 
 function makeFormat(level, messageColor) {
-  return level + ' ' + $.gray('${padding}') + $[messageColor]('${message}');
+  return '<% if (date) { %>' + $.gray('${date}') + '<% } %>' +
+    level + ' ' +
+    '<% if (padding) { %>' + $.gray('${padding}') + '<% } %>' +
+    $[messageColor]('${message}') +
+    '<% if (debug) { %>' + $.gray('${debug}') + '<% } %>';
 }
 
 // Instantiate logger with custom levels.
@@ -17,6 +21,7 @@ var parentLog = new ProLog({
 
 // This child logger will send all logging messages to its parent. Note that
 // the "output" option is set to false by default for child loggers.
+var childLogs = [];
 var childLog = new ProLog(parentLog, {
   levels: {
     // Don't inherit the parent-only level.
@@ -24,7 +29,18 @@ var childLog = new ProLog(parentLog, {
     // Create a child-only level.
     childonly: {priority: 2, format: makeFormat($.cyan('chi'), 'cyan')},
   },
+  // Totally custom output just for the child logger.
+  output: function(data) {
+    childLogs.push($.stripColor(this.format(data)));
+  },
+  formatDate: true,
+  formatDebug: true,
+  formatPadding: function(data) {
+    return new Array(data.indent + 1).join('  ');
+  },
 });
+
+console.log('===== Parent and Child Logs =====\n');
 
 parentLog.group('Logging levels that don\'t exist on a logger can\'t be called.');
 parentLog.log('This log message comes from the parent.');
@@ -76,3 +92,6 @@ parentLog.log('This parent log message should not be indented.');
 childLog.log('This child log message should be indented once.');
 childLog.groupEnd();
 childLog.header('[3] Decrease childLog indent');
+
+console.log('\n===== Just Child Logs =====\n');
+console.log(childLogs.join('\n'));
