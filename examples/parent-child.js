@@ -30,11 +30,18 @@ var childLog = new ProLog(parentLog, {
     childonly: {priority: 2, format: makeFormat($.cyan('chi'), 'cyan')},
   },
   // Totally custom output just for the child logger.
+  // Push un-colored formatted message onto an array.
   output: function(data) {
     childLogs.push($.stripColor(this.format(data)));
   },
+  // Don't split output across multiple lines.
+  format: function(data) {
+    return data.format(this.dataPlus(data));
+  },
+  // Show date and debugging info.
   formatDate: true,
   formatDebug: true,
+  // Simplify padding.
   formatPadding: function(data) {
     return new Array(data.indent + 1).join('  ');
   },
