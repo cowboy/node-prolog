@@ -103,11 +103,13 @@ function groupingExample() {
 parentExample();
 childExample();
 
-// Help differentiate childLog messages visually.
-childLog.filter = function(data) {
-  data.message = this.eachLine(data.message, $.yellow);
+// Differentiate childLog messages visually when logged through parentLog.
+parentLog.filter = function(data) {
+  if (data.logger !== this) {
+    data.message = this.eachLine(data.message, $.yellow);
+  }
 };
-childLog.log('All childlog messages should now be yellow.');
+childLog.log('All childlog messages logged via parentLog should now be yellow.');
 
 groupingExample();
 
