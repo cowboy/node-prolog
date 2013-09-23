@@ -49,7 +49,8 @@ var childLog = new ProLog(parentLog, {
 
 console.log('===== Parent and Child Logs =====\n');
 
-function parentExample() {
+var examples = {};
+examples.parent = function() {
   parentLog.group('Logging levels that don\'t exist on a logger can\'t be called.');
   parentLog.log('This log message comes from the parent.');
   parentLog.parentonly('This "parentonly" message comes from the parent.');
@@ -61,7 +62,7 @@ function parentExample() {
   parentLog.groupEnd();
 }
 
-function childExample() {
+examples.child = function() {
   childLog.group('But will be passed-through.');
   childLog.log('This log message comes from the child.');
   childLog.childonly('This "childonly" message comes from the child.');
@@ -73,7 +74,7 @@ function childExample() {
   childLog.groupEnd();
 }
 
-function groupingExample() {
+examples.grouping = function() {
   parentLog.header('Note that indentation is cumulative.');
   parentLog.log('This parent log message should not be indented.');
   childLog.log('This child log message should not be indented.');
@@ -100,8 +101,8 @@ function groupingExample() {
   childLog.header('[3] Decrease childLog indent');
 }
 
-parentExample();
-childExample();
+examples.parent();
+examples.child();
 
 // Differentiate childLog messages visually when logged through parentLog.
 parentLog.filter = function(data) {
@@ -111,7 +112,7 @@ parentLog.filter = function(data) {
 };
 childLog.log('All childlog messages logged via parentLog should now be yellow.');
 
-groupingExample();
+examples.grouping();
 
 console.log('\n===== Just Child Logs =====\n');
 console.log(childLogs.join('\n'));
